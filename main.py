@@ -57,6 +57,8 @@ def generateEquation():
 
         # return jsonify({'image': img_base64})
 
+        #testinggggg
+
 
         return jsonify({'result': "3x-7=2"})
 
