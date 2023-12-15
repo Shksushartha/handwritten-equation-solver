@@ -13,9 +13,10 @@ app = Flask(__name__)
 def solve():
     try:
         data = request.get_json()
+
         equation = data['equation']
 
-        equation_query = equation
+        equation_query = equation[1]
 
         app_id = 'HWRQK4-8L96HA9XVT'
 
@@ -59,8 +60,13 @@ def generateEquation():
 
         #testinggggg
 
+        result = []
 
-        return jsonify({'result': "3x-7=2"})
+        result.append("3x-7=2")
+        result.append("2x-8=2")
+
+
+        return jsonify({'result': result})
 
     except Exception as e:
             return jsonify({'error': str(e)})
