@@ -47,6 +47,10 @@ def solveLinearEquation(equations):
 
     print(lhs_matrix)
     print(rhs_matrix)
+    result = []
     X = np.linalg.solve(lhs_matrix, rhs_matrix)
     print(X)
-    return X
+    for value in X:
+        result.append(value[0])
+
+    return result

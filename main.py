@@ -47,7 +47,7 @@ def solve():
         else:
             print("error")
 
-        return jsonify({'result': np.array2string(result)})
+        return jsonify({'result': result})
 
     except Exception as e:
         return jsonify({'error': str(e)})
