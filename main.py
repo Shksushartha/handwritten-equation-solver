@@ -1,35 +1,53 @@
 from flask import Flask, request, jsonify
 from ParseXml import extract_steps_from_xml
+from CheckEquationType import getEquationType
+from LinearEquation import solveLinearEquation
 from PIL import Image
+from flask_cors import CORS
 import os
 import cv2
 import numpy as np
 import base64
 import requests
 
+
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3001"}})
 
 @app.route('/solve', methods=['POST'])
 def solve():
     try:
         data = request.get_json()
 
-        equation = data['equation']
+        equations = data['equation']
 
-        equation_query = equation[1]
+        finalEquationType = 0
 
-        app_id = 'HWRQK4-8L96HA9XVT'
+        for equation in equations:
+                equationType = getEquationType(equation)
+                if(equationType == 0):
+                    finalEquationType = 0
+                elif(equationType > finalEquationType):
+                    finalEquationType = equationType
 
-        external_api_url = f'http://api.wolframalpha.com/v2/query?appid={app_id}&input=solve+{equation_query}&podstate=Result__Step-by-step+solution&format=plaintext'
+        # app_id = 'HWRQK4-8L96HA9XVT'
+        #
+        # external_api_url = f'http://api.wolframalpha.com/v2/query?appid={app_id}&input=solve+{equation_query}&podstate=Result__Step-by-step+solution&format=plaintext'
+        #
+        # response = requests.get(external_api_url)
+        #
+        # if response.status_code == 200:
+        #     result = extract_steps_from_xml(response.content)
+        # else:
+        #     return jsonify({'error': f"Failed to make API call. Status code: {response.status_code}"})
 
-        response = requests.get(external_api_url)
-
-        if response.status_code == 200:
-            result = extract_steps_from_xml(response.content)
+        if(finalEquationType == 1):
+            result = solveLinearEquation(equations)
+            print("result received")
         else:
-            return jsonify({'error': f"Failed to make API call. Status code: {response.status_code}"})
+            print("error")
 
-        return jsonify({'result': result})
+        return jsonify({'result': np.array2string(result)})
 
     except Exception as e:
         return jsonify({'error': str(e)})

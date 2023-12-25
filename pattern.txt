@@ -1,0 +1,2 @@
+linear_pattern = r'^\s*([+-]?\s*\d*\s*[a-zA-Z]?)\s*([+-]\s*\d*\s*[a-zA-Z]?)*\s*=\s*(\s*[+-]?\s*\d*\s*[a-zA-Z]?)\s*([+-]\s*\d*\s*[a-zA-Z]?)*$'
+
