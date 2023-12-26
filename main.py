@@ -19,27 +19,16 @@ def solve():
     try:
         data = request.get_json()
 
-        equations = data['equation']
+        equations = ["3x - 4y + 5z = 10","4x - 2y + z = 12","1x + 3y - 6z = 2"]
 
-        finalEquationType = 0
+        finalEquationType = 1
 
-        for equation in equations:
-                equationType = getEquationType(equation)
-                if(equationType == 0):
-                    finalEquationType = 0
-                elif(equationType > finalEquationType):
-                    finalEquationType = equationType
-
-        # app_id = 'HWRQK4-8L96HA9XVT'
-        #
-        # external_api_url = f'http://api.wolframalpha.com/v2/query?appid={app_id}&input=solve+{equation_query}&podstate=Result__Step-by-step+solution&format=plaintext'
-        #
-        # response = requests.get(external_api_url)
-        #
-        # if response.status_code == 200:
-        #     result = extract_steps_from_xml(response.content)
-        # else:
-        #     return jsonify({'error': f"Failed to make API call. Status code: {response.status_code}"})
+        # for equation in equations:
+        #         equationType = getEquationType(equation)
+        #         if(equationType == 0):
+        #             finalEquationType = 0
+        #         elif(equationType > finalEquationType):
+        #             finalEquationType = equationType
 
         if(finalEquationType == 1):
             result = solveLinearEquation(equations)
@@ -50,7 +39,18 @@ def solve():
         return jsonify({'result': result})
 
     except Exception as e:
-        return jsonify({'error': str(e)})
+        app_id = 'HWRQK4-8L96HA9XVT'
+        return jsonify({'error' : str(e)})
+        #
+        # external_api_url = f'http://api.wolframalpha.com/v2/query?appid={app_id}&input=solve+{equations[0]}&podstate=Result__Step-by-step+solution&format=plaintext'
+        #
+        # response = requests.get(external_api_url)
+        # print(f"api called {response.content}")
+        #
+        # if response.status_code == 200:
+        #     return jsonify({'result' : extract_steps_from_xml(response.content)})
+        # else:
+        #     return jsonify({'error': f"Failed to make API call. Status code: {response.status_code}"})
 
 
 
