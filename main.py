@@ -19,16 +19,16 @@ def solve():
     try:
         data = request.get_json()
 
-        equations = ["3x - 4y + 5z = 10","4x - 2y + z = 12","1x + 3y - 6z = 2"]
+        equations = data['equation']
 
-        finalEquationType = 1
+        finalEquationType = 0
 
-        # for equation in equations:
-        #         equationType = getEquationType(equation)
-        #         if(equationType == 0):
-        #             finalEquationType = 0
-        #         elif(equationType > finalEquationType):
-        #             finalEquationType = equationType
+        for equation in equations:
+                equationType = getEquationType(equation)
+                if(equationType == 0):
+                    finalEquationType = 0
+                elif(equationType > finalEquationType):
+                    finalEquationType = equationType
 
         if(finalEquationType == 1):
             result = solveLinearEquation(equations)
