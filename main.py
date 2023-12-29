@@ -1,8 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 from ParseXml import extract_steps_from_xml
 from CheckEquationType import getEquationType
 from LinearEquation import solveLinearEquation
+from ImageSegmentation import LineSegmentation, CharacterSegmentation
+from Utils import resize_pad
+from model import predict_image
 from PIL import Image
+from matplotlib import pyplot as plt
 from flask_cors import CORS
 import os
 import cv2
@@ -12,7 +16,7 @@ import requests
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3001"}})
+cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3002"}})
 
 @app.route('/solve', methods=['POST'])
 def solve():
@@ -65,6 +69,45 @@ def generateEquation():
         image_file.save(image_path)
 
         img = cv2.imread(os.path.join(upload_folder, image_file.filename))
+
+        line_seg = LineSegmentation(img)
+
+        print(line_seg)
+
+        keep = []
+
+        equation_list = []
+
+        for (x, y, w, h) in sorted(line_seg, key=lambda x: x[0]):
+            single_equation_image = img[y:y+h, x:x+w]
+            temp_keep = CharacterSegmentation(img, x, y, w, h)
+            print(f"temp keep: {temp_keep}")
+            padded_images_list = []
+            for (x, y, w, h) in sorted(temp_keep, key=lambda x: x[0]):
+                single_character_image = single_equation_image[y:y+h, x:x+w]
+                padded_img = resize_pad(single_character_image, (45, 45))
+                ret, jpeg = cv2.imencode('.jpg', padded_img)
+                padded_images_list.append(jpeg)
+            equation = ""
+            for image in sorted(padded_images_list, key=lambda x: x[0]):
+                predicted_character = predict_image(image)
+                equation = equation + predicted_character
+
+            equation_list.append(equation)
+        # for img in sorted(padded_images_list, key=lambda x: x[0]):
+
+        # result = []
+        #
+        # result.append("3x-7=2")
+        # result.append("2x-8=2")
+
+        return jsonify({'result': equation_list})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+
         # Convert the processed image to bytes
         # _, buffer = cv2.imencode('.jpg', img)
         # img_bytes = buffer.tobytes()
@@ -78,16 +121,7 @@ def generateEquation():
 
         #testinggggg
 
-        result = []
 
-        result.append("3x-7=2")
-        result.append("2x-8=2")
-
-
-        return jsonify({'result': result})
-
-    except Exception as e:
-            return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)

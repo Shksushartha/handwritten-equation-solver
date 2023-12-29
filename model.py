@@ -1,0 +1,37 @@
+from keras.models import load_model
+import cv2
+import os
+import numpy as np
+from keras import backend as K
+from keras.models import Sequential
+from keras.layers import Input, Dropout, Flatten, Conv2D, MaxPooling2D, Dense, Activation
+from keras.optimizers import RMSprop
+from keras.callbacks import ModelCheckpoint, Callback, EarlyStopping
+from keras.utils import np_utils
+from keras.preprocessing.image import ImageDataGenerator
+import tensorflow as tf
+
+def mathsymbol():
+    model = Sequential()
+    model.add(Conv2D(32, (5, 5), input_shape=(45, 45, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.2))
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dense(26, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+def predict_image(img):
+    K.clear_session()
+    model = mathsymbol()
+    model.load_weights(os.path.abspath('./python_utils/HESWeightsFinal.h5'))
+    img = cv2.resize(img, (45, 45))
+    img = np.reshape(img, (1, 45, 45, 3))
+    prediction = model.predict(img)
+    # L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'a', 'alpha', 'b', 'beta', 'c', 'e', 'i', 'j', 'k', 'pi', 'x', 'y', 'z']
+    L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', '2', '2', '6', 'beta', '(', 'e',
+         'i', 'j', 'k', 'pi', 'x', 'x', '2']
+    ans = L[np.argmax(prediction)]
+
+    return ans
