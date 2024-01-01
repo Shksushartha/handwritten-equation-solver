@@ -18,7 +18,7 @@ def mathsymbol():
     model.add(Dropout(0.2))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(26, activation='softmax'))
+    model.add(Dense(28, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
 
