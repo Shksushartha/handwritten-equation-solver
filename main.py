@@ -16,7 +16,7 @@ import requests
 
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3002"}})
+cors = CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 @app.route('/solve', methods=['POST'])
 def solve():
@@ -38,14 +38,16 @@ def solve():
             result = solveLinearEquation(equations)
             print("result received")
         else:
+            print(finalEquationType)
             print("error")
+            # raise Exception()
 
         return jsonify({'result': result})
 
     except Exception as e:
         app_id = 'HWRQK4-8L96HA9XVT'
         return jsonify({'error' : str(e)})
-        #
+
         # external_api_url = f'http://api.wolframalpha.com/v2/query?appid={app_id}&input=solve+{equations[0]}&podstate=Result__Step-by-step+solution&format=plaintext'
         #
         # response = requests.get(external_api_url)
@@ -82,6 +84,7 @@ def generateEquation():
             single_equation_image = img[y:y+h, x:x+w]
             temp_keep = CharacterSegmentation(img, x, y, w, h)
             print(f"temp keep: {temp_keep}")
+            equation = ''
             for (x, y, w, h) in sorted(temp_keep, key=lambda x: x[0]):
                 single_character_image = single_equation_image[y:y + h, x:x + w]
                 padded_img = resize_pad(single_character_image, (45, 45))
