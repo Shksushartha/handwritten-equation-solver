@@ -27,10 +27,11 @@ def predict_image(img):
     K.clear_session()
     model = mathsymbol()
     model.load_weights('HESWeightsFinal.h5')
+    # model.load_weights('weights.h5')
     img = cv2.resize(img, (45, 45))
     img = np.reshape(img, (1, 45, 45, 3))
     prediction = model.predict(img)
-    L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'a', 'alpha', 'b', 'beta', 'c', 'e', 'i', 'j', 'k', 'pi', 'x', 'y', 'z']
+    L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'a', 'b', 'c', 'e', 'c', 'e', 'k', 'j', 'x', 'y', 'x', 'y', 'z']
     # L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', '2', '2', '6', 'beta', '(', 'e',
     #      'i', 'j', 'k', 'pi', 'x', 'x', '2']
     ans = L[np.argmax(prediction)]

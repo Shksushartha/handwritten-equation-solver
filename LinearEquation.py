@@ -38,7 +38,7 @@ def solveLinearEquation(equations):
         rhs_matches.pop()
 
         # Convert the coefficients to integers and create matrices
-        lhs_coefficients = [1 if match.strip() == '+' else (1 if match.strip() == '' else ( int(match.replace(' ', '')) if match.strip() else 0)) for match in lhs_matches]
+        lhs_coefficients = [1 if (match.strip() == '+' or match.strip() == '-') else (1 if match.strip() == '' else ( int(match.replace(' ', '')) if match.strip() else 0)) for match in lhs_matches]
 
         # lhs_coefficients = [
         #     int(match.replace(' ', '')) if match.strip() and match.strip() != '+' else (1 if '+' in match else 0) for
@@ -57,10 +57,10 @@ def solveLinearEquation(equations):
 
     print(lhs_matrix)
     print(rhs_matrix)
-    result = []
+    result = 'The values are: '
     X = np.linalg.solve(lhs_matrix, rhs_matrix)
     print(X)
     for value in X:
-        result.append(value[0])
+        result = result + str(value)
 
     return result

@@ -37,12 +37,15 @@ def solve():
         if(finalEquationType == 1):
             result = solveLinearEquation(equations)
             print("result received")
+            toPrint = ''
+            for values in result:
+                toPrint = toPrint + values
         else:
             print(finalEquationType)
             print("error")
             # raise Exception()
 
-        return jsonify({'result': result})
+        return jsonify({'result': toPrint})
 
     except Exception as e:
         app_id = 'HWRQK4-8L96HA9XVT'
@@ -88,14 +91,11 @@ def generateEquation():
             for (x, y, w, h) in sorted(temp_keep, key=lambda x: x[0]):
                 single_character_image = single_equation_image[y:y + h, x:x + w]
                 padded_img = resize_pad(single_character_image, (45, 45))
-                ret, jpeg = cv2.imencode('.jpg', padded_img)
-                # plt.imshow(padded_img, cmap='gray')
-                # plt.show()
-                # padded_images_list.append(padded_img)
                 predicted_character = predict_image(padded_img)
                 equation = equation + predicted_character
 
             equation_list.append(equation)
+            equation_list.reverse()
         # for img in sorted(padded_images_list, key=lambda x: x[0]):
 
         # result = []
