@@ -53,7 +53,8 @@ def detect_contours(x,y,w,h,img):
     input_image_cpy = cv2.cvtColor(input_image_cpy, cv2.COLOR_BGR2GRAY)
 
     # Convert the grayscale image to binary (image binarization opencv python), then invert
-    binarized = cv2.adaptiveThreshold(input_image_cpy,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
+    ret, thresholded_img = cv2.threshold(input_image_cpy, 50, 255, cv2.THRESH_BINARY)
+    binarized = cv2.adaptiveThreshold(thresholded_img,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
     inverted_binary_img = ~binarized
 
     # Detect contours

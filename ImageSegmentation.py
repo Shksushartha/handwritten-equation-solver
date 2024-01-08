@@ -3,7 +3,8 @@ import cv2
 from matplotlib import pyplot as plt
 def LineSegmentation(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret, thresh2 = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY_INV)
+    # ret, thresh2 = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY_INV)
+    ret, thresh2 = cv2.threshold(img_gray, 30, 255, cv2.THRESH_BINARY_INV)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (400, 2))
     mask = cv2.morphologyEx(thresh2, cv2.MORPH_DILATE, kernel)
 
