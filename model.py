@@ -28,7 +28,8 @@ def predict_image(img):
     model = mathsymbol()
     model.load_weights('HESWeightsFinal.h5')
     # model.load_weights('weights.h5')
-    img = cv2.resize(img, (45, 45))
+    ret, thresholded_img = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
+    img = cv2.resize(thresholded_img, (45, 45))
     img = np.reshape(img, (1, 45, 45, 3))
     prediction = model.predict(img)
     L = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'a', 'b', 'c', 'e', 'c', 'e', 'k', 'j', 'x', 'y', 'x', 'y', 'z']

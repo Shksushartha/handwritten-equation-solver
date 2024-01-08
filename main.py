@@ -74,9 +74,11 @@ def generateEquation():
         image_file.save(image_path)
 
         img = cv2.imread(os.path.join(upload_folder, image_file.filename))
-        # ret, thresholded_img = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
 
-        # thresholded_img.save(image_path)
+        # thresholded_image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 51,
+        #                                           30)
+        # img = Image.fromarray(thresholded_image)
+        print("reached before calling line seg")
 
         line_seg = LineSegmentation(img)
 
@@ -87,7 +89,6 @@ def generateEquation():
         equation_list = []
 
         for (x, y, w, h) in sorted(line_seg, key=lambda x: x[0]):
-            # ret, thresholded_img = cv2.threshold(img, 50, 255, cv2.THRESH_BINARY)
             single_equation_image = img[y:y+h, x:x+w]
             temp_keep = CharacterSegmentation(img, x, y, w, h)
             print(f"temp keep: {temp_keep}")
