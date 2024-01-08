@@ -33,13 +33,19 @@ def solve():
                     finalEquationType = 0
                 elif(equationType > finalEquationType):
                     finalEquationType = equationType
-
+        toPrint = ''
         if(finalEquationType == 1):
             result = solveLinearEquation(equations)
             print("result received")
-            toPrint = ''
+
             for values in result:
                 toPrint = toPrint + values
+        elif(finalEquationType == 3):
+            equation = equations[0].replace('x', '*')
+            print(equations)
+            print(equation)
+            result = eval(equation)
+            toPrint = str(result)
         else:
             print(finalEquationType)
             print("error")
@@ -66,31 +72,34 @@ def solve():
 @app.route('/generateEquation', methods=['POST'])
 def generateEquation():
     try:
+        #load image
         image_file = request.files['image']
 
         upload_folder = 'uploads'
         os.makedirs(upload_folder, exist_ok=True)
         image_path = os.path.join(upload_folder, image_file.filename)
-        image_file.save(image_path)
+        image_file.save(image_path) #save the loaded image to upload directory
 
-        img = cv2.imread(os.path.join(upload_folder, image_file.filename))
+        img = cv2.imread(os.path.join(upload_folder, image_file.filename), cv2.IMREAD_GRAYSCALE)
 
-        # thresholded_image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 51,
-        #                                           30)
-        # img = Image.fromarray(thresholded_image)
+        #perform thresholding
+        thresholded_image = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 51,
+                                                  30)
+        img = Image.fromarray(thresholded_image)
         print("reached before calling line seg")
+        img.save(image_path) #save the thresholded image to the same directory
 
-        line_seg = LineSegmentation(img)
+        saved_image = cv2.imread(os.path.join(upload_folder, image_file.filename))
+
+        line_seg = LineSegmentation(saved_image)
 
         print(line_seg)
-
-        keep = []
 
         equation_list = []
 
         for (x, y, w, h) in sorted(line_seg, key=lambda x: x[0]):
-            single_equation_image = img[y:y+h, x:x+w]
-            temp_keep = CharacterSegmentation(img, x, y, w, h)
+            single_equation_image = saved_image[y:y+h, x:x+w]
+            temp_keep = CharacterSegmentation(saved_image, x, y, w, h)
             print(f"temp keep: {temp_keep}")
             equation = ''
             for (x, y, w, h) in sorted(temp_keep, key=lambda x: x[0]):
@@ -101,34 +110,11 @@ def generateEquation():
 
             equation_list.append(equation)
             equation_list.reverse()
-        # for img in sorted(padded_images_list, key=lambda x: x[0]):
-
-        # result = []
-        #
-        # result.append("3x-7=2")
-        # result.append("2x-8=2")
 
         return jsonify({'result': equation_list})
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
-
-
-        # Convert the processed image to bytes
-        # _, buffer = cv2.imencode('.jpg', img)
-        # img_bytes = buffer.tobytes()
-
-        # if img is None:
-        #     return jsonify({'error': 'Unable to read the image'}), 400
-        # Return the processed image as base64
-        # img_base64 = base64.b64encode(img_bytes).decode('utf-8')
-
-        # return jsonify({'image': img_base64})
-
-        #testinggggg
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

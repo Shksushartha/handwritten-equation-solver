@@ -11,12 +11,20 @@ def LineSegmentation(img):
     bboxes_img = img.copy()
     contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0] if len(contours) == 2 else contours[1]
+    largest_area = 0
     for cntr in contours:
         x, y, w, h = cv2.boundingRect(cntr)
         cv2.rectangle(bboxes_img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+        area = w * h
+        if largest_area < area:
+            largest_area = area
         bboxes.append((x, y, w, h))
 
-    return bboxes
+    filtered_bboxes = [bbox for bbox in bboxes if (bbox[2] * bbox[3] * 100) / largest_area > 4]
+    print("filteredBoxes")
+    print(filtered_bboxes)
+
+    return filtered_bboxes
 
 def CharacterSegmentation(img1, x,y,w,h):
     keep = detect_contours(x, y, w, h, img1)
