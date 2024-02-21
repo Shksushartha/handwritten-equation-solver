@@ -33,7 +33,7 @@ def resize_pad(img, size, padColor=[255, 255, 255]):
         pad_left, pad_right, pad_top, pad_bot = 0, 0, 0, 0
 
     # set pad color
-    if len(img.shape) is 3 and not isinstance(padColor, (list, tuple, np.ndarray)): # color image but only one color provided
+    if len(img.shape) == 3 and not isinstance(padColor, (list, tuple, np.ndarray)): # color image but only one color provided
         padColor = [padColor]*3
 
     # scale and pad
