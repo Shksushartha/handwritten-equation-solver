@@ -23,7 +23,6 @@ def getMaxNumberOfLhsAndRhsCoef(equations):
 
     return [maxCountLhs, maxCountRhs]
 def solveLinearEquation(equations):
-    # numberOfCoef = getMaxNumberOfLhsAndRhsCoef(equations[0])
     print("solve linear called")
     lhsEquationArray = []
     rhsEquationArray = []
@@ -40,10 +39,6 @@ def solveLinearEquation(equations):
         # Convert the coefficients to integers and create matrices
         lhs_coefficients = [1 if (match.strip() == '+' or match.strip() == '-') else (1 if match.strip() == '' else ( int(match.replace(' ', '')) if match.strip() else 0)) for match in lhs_matches]
 
-        # lhs_coefficients = [
-        #     int(match.replace(' ', '')) if match.strip() and match.strip() != '+' else (1 if '+' in match else 0) for
-        #     match in lhs_matches]
-
         rhs_constant = [int(match.replace(' ', '')) if match.strip() else 0 for match in rhs_matches]
 
         print(lhs_coefficients)
@@ -55,12 +50,15 @@ def solveLinearEquation(equations):
     lhs_matrix = np.vstack(lhsEquationArray)
     rhs_matrix = np.vstack(rhsEquationArray)
 
+    lhs_inverse = np.linalg.inv(lhs_matrix)
+    solution = np.dot(lhs_inverse, rhs_matrix)
+
     print(lhs_matrix)
     print(rhs_matrix)
     result = 'The values are: '
-    X = np.linalg.solve(lhs_matrix, rhs_matrix)
-    print(X)
-    for value in X:
+    # X = np.linalg.solve(lhs_matrix, rhs_matrix)
+    print(solution)
+    for value in solution:
         result = result + str(value)
 
     return result

@@ -3,6 +3,7 @@ from ParseXml import extract_steps_from_xml
 from CheckEquationType import getEquationType
 from LinearEquation import solveLinearEquation
 from ImageSegmentation import LineSegmentation, CharacterSegmentation
+from PolynomialEquation import solvePolynomialEquation
 from Utils import resize_pad
 from model import predict_image
 from PIL import Image
@@ -40,6 +41,9 @@ def solve():
 
             for values in result:
                 toPrint = toPrint + values
+        elif(finalEquationType == 2):
+            result = solvePolynomialEquation(equations[0])
+            toPrint = "The root is " + str(result)
         elif(finalEquationType == 3):
             equation = equations[0].replace('x', '*')
             print(equations)

@@ -4,13 +4,13 @@ def getEquationType(equation):
 
     linear_pattern = r'^(\s*[+-]?\s*\d*\s*[a-zA-Z])\s*(\s*[+-]\s*\d*\s*[a-zA-Z]\s*)*\s*=\s*([+-]?\s*\d*\s*)\s*$'
 
-    quadratic_pattern = r'^(\s*[+-]?\s*(\d*)\s*([a-zA-Z])\s*(\^\s*(\d+))?)\s*(\s*[+-]\s*(\d*)\s*([a-zA-Z])\s*(\^\s*(\d+))?)*\s*=\s*([+-]?\s*\d*\s*)\s*$'
-
+    # quadratic_pattern = r'^(\s*[+-]?\s*(\d*)\s*([a-zA-Z])\s*(\^\s*(\d+))?)\s*(\s*[+-]\s*(\d*)\s*([a-zA-Z])\s*(\^\s*(\d+))?)*\s*=\s*([+-]?\s*\d*\s*)\s*$'
+    quadratic_pattern = r'.*\(\d+\).*'
     # Check if the input matches the linear equation pattern
-    if re.match(linear_pattern, equation):
+    if re.match(quadratic_pattern, equation):
+        return 2  # linearEquation
+    elif re.match(linear_pattern, equation):
         return 1 #linearEquation
-    elif re.match(quadratic_pattern, equation):
-        return 2 #linearEquation
     elif re.match(calculation_pattern, equation):
         return 3 #linearEquation
     else:
