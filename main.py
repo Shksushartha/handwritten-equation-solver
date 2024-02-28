@@ -43,7 +43,7 @@ def solve():
                 toPrint = toPrint + values
         elif(finalEquationType == 2):
             result = solvePolynomialEquation(equations[0])
-            toPrint = "The root is " + str(result)
+            toPrint = "The root is " + str(round(result,4))
         elif(finalEquationType == 3):
             equation = equations[0].replace('x', '*')
             print(equations)
@@ -53,6 +53,7 @@ def solve():
         else:
             print(finalEquationType)
             print("error")
+            toPrint = "Equation type not identified."
             # raise Exception()
 
         return jsonify({'result': toPrint})

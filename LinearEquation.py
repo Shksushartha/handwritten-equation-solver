@@ -37,8 +37,7 @@ def solveLinearEquation(equations):
         rhs_matches.pop()
 
         # Convert the coefficients to integers and create matrices
-        lhs_coefficients = [1 if (match.strip() == '+' or match.strip() == '-') else (1 if match.strip() == '' else ( int(match.replace(' ', '')) if match.strip() else 0)) for match in lhs_matches]
-
+        lhs_coefficients = [1 if (match.strip() == '+') else (-1 if match.strip() == '-' else (1 if match.strip() == '' else (int(match.replace(' ', '')) if match.strip() else 0))) for match in lhs_matches]
         rhs_constant = [int(match.replace(' ', '')) if match.strip() else 0 for match in rhs_matches]
 
         print(lhs_coefficients)
